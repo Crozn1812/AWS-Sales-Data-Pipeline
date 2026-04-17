@@ -1,0 +1,6 @@
+pandas
+awswrangler
+boto3
+pytest
+moto
+pytest-mock
