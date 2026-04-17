@@ -203,4 +203,4 @@ Lambda execution logs confirm successful processing without runtime errors.
 ![error](./evidence/04_error.png)
 
 ### Metadata Tracking (DynamoDB)
-![dynamodb](./evidence/05_dynamodb.png)
+![dynamodb](./evidence/05_dynamoDB.png)
