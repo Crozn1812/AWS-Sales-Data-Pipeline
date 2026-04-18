@@ -184,7 +184,15 @@ Example:
 * error_records: 4
 * status: COMPLETED
 
-### 7. CloudWatch Logs
+### 7.Business Metrics
+
+The pipeline also computes key business metrics:
+
+- Daily revenue
+- Top products
+- Payment success rate
+
+### 8. CloudWatch Logs
 
 Lambda execution logs confirm successful processing without runtime errors.
 
@@ -204,3 +212,22 @@ Lambda execution logs confirm successful processing without runtime errors.
 
 ### Metadata Tracking (DynamoDB)
 ![dynamodb](./evidence/05_dynamoDB.png)
+
+### Business Metrics
+![business-metrics](./evidence/06_business_metrics.png)
+
+### CloudWatch Logs
+
+![cloudwatch](evidence/07_cloudwatch.png)
+
+## Additional Documentation
+- [Architecture Design](./docs/architecture.md)
+- [Architecture Decision Records](./docs/adrs.md)
+- [Failure Scenarios](./docs/failure-scenarios.md)
+
+## Limitations & Future Improvements
+
+- Add retry mechanism for failed Lambda execution
+- Add CloudWatch alerts for failures
+- Improve idempotency to avoid duplicate processing
+- Integrate with Athena or BI tools for analytics

@@ -68,3 +68,36 @@ def test_payment_status_is_preserved_in_clean_data():
     assert len(df_error) == 0
     assert "payment_status" in df_clean.columns
     assert set(df_clean["payment_status"]) == {"paid", "pending"}
+
+def test_duplicate_rows():
+    data = {
+        "order_id": ["ORD100", "ORD100"],
+        "product_id": ["PROD1", "PROD1"],
+        "order_date": ["2024-01-15", "2024-01-15"],
+        "quantity": [1, 1],
+        "unit_price": [10.0, 10.0],
+        "payment_status": ["paid", "paid"],
+    }
+
+    df = pd.DataFrame(data)
+    df_clean, df_error = clean_and_transform_sales_data(df)
+
+    assert len(df_clean) == 1
+    assert len(df_error) == 1
+
+
+def test_negative_quantity():
+    data = {
+        "order_id": ["ORD200"],
+        "product_id": ["PROD2"],
+        "order_date": ["2024-01-16"],
+        "quantity": [-1],
+        "unit_price": [10.0],
+        "payment_status": ["paid"],
+    }
+
+    df = pd.DataFrame(data)
+    df_clean, df_error = clean_and_transform_sales_data(df)
+
+    assert len(df_clean) == 0
+    assert len(df_error) == 1
