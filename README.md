@@ -2,9 +2,9 @@
 
 ## Overview
 
-This project implements an event-driven data pipeline on AWS to process retail sales data.
+This project builds an event-driven data pipeline on AWS to process retail sales data.
 
-When a CSV file is uploaded to Amazon S3, the system automatically validates, cleans, and transforms the data, then stores results in structured storage for downstream analytics.
+When a CSV file is uploaded to Amazon S3, the system automatically validates, cleans, and transforms the data, then stores results for analytics.
 
 ---
 
@@ -21,28 +21,39 @@ When a CSV file is uploaded to Amazon S3, the system automatically validates, cl
 ### Data Flow
 
 1. CSV file uploaded to S3 Raw bucket
-2. S3 event triggers Lambda function
+2. S3 triggers Lambda function
 3. Lambda processes the file:
 
-   * Validates schema
-   * Cleans data
-   * Splits clean and invalid records
-4. Outputs:
+   * Validate schema
+   * Clean data
+   * Split valid and invalid records
+4. Output:
 
-   * Clean data → Processed bucket (partitioned)
+   * Clean data → Processed bucket
    * Invalid data → Error bucket
-   * Processing metadata → DynamoDB
+   * Metadata → DynamoDB
 
 ---
 
 ## Key Features
 
 * Event-driven architecture (S3 → Lambda)
-* Data validation and cleansing
-* Separation of valid and invalid records
-* Partitioned storage for optimized querying
-* Metadata tracking for observability
-* Fully deployed using Infrastructure as Code (AWS CDK)
+* Data validation and cleaning
+* Error handling pipeline
+* Partitioned data storage
+* Metadata tracking with DynamoDB
+* Infrastructure as Code with AWS CDK
+
+---
+
+## Business Metrics
+
+The pipeline computes important metrics:
+
+* Daily revenue
+* Top products
+* Payment success rate
+* Orders per customer
 
 ---
 
@@ -50,12 +61,13 @@ When a CSV file is uploaded to Amazon S3, the system automatically validates, cl
 
 ```text
 aws-sales-data-pipeline/
-├── infrastructure/      # CDK stack
-├── src/                 # Lambda + data processing logic
-├── tests/               # Unit tests
-├── app.py               # CDK entry point
-├── run_local.py         # Local testing script
-├── requirements.txt
+├── infrastructure/
+├── src/
+├── tests/
+├── evidence/
+├── docs/
+├── app.py
+├── run_local.py
 ```
 
 ---
@@ -67,7 +79,7 @@ aws-sales-data-pipeline/
 * AWS CLI configured
 * AWS CDK installed
 
-### Deploy infrastructure
+### Deploy
 
 ```bash
 cdk bootstrap
@@ -78,17 +90,17 @@ cdk deploy
 
 ## Testing
 
-### Run unit tests
-
 ```bash
 pytest tests/ -v
 ```
 
-### Local execution
+✔ 5 test cases included:
 
-```bash
-python run_local.py
-```
+* Happy path
+* Missing data
+* Duplicate records
+* Invalid values
+* Error handling
 
 ---
 
@@ -102,47 +114,78 @@ python run_local.py
 
 ---
 
+## Execution Evidence
+
+### Unit Tests
+
+![pytest](./evidence/01_pytest.png)
+
+### Deployment
+
+![deploy](./evidence/02_deploy.png)
+
+### Processed Data (S3)
+
+![processed](./evidence/03_processed.png)
+
+### Error Handling (S3)
+
+![error](./evidence/04_error.png)
+
+### Metadata Tracking (DynamoDB)
+
+![dynamodb](./evidence/05_dynamoDB.png)
+
+### Business Metrics
+
+![business](./evidence/06_business_metrics.png)
+
+### CloudWatch Logs
+
+![cloudwatch](./evidence/07_cloudwatch.png)
+
+---
+
 ## Design Decisions
 
-### Why S3?
-
-* Scalable storage for raw and processed data
-* Native integration with event-driven workflows
-
-### Why Lambda?
-
-* Serverless processing with automatic scaling
-* Cost-efficient for event-based workloads
-
-### Why DynamoDB?
-
-* Fast and simple key-value store for metadata
-* No schema constraints
+* Lambda is used for simple and scalable processing
+* S3 is used for storage and event trigger
+* DynamoDB is used for fast metadata tracking
 
 ---
 
 ## Security & IAM
 
-* Principle of least privilege applied to Lambda role
+* Principle of least privilege applied
 * S3 buckets block public access
 * IAM policies scoped to required resources only
 
 ---
 
-## Limitations
+## Reliability
 
-* Not optimized for very large datasets
-* No retry or orchestration layer (e.g., Step Functions)
-* No schema evolution handling
+* Bad records are separated into error bucket
+* Logs are available in CloudWatch
+* Future improvement: retry and idempotency
 
 ---
 
-## Future Improvements
+## Additional Documentation
 
-* Add AWS Glue for large-scale processing
-* Add Athena for querying processed data
-* Add monitoring & alerting (CloudWatch Alarms)
-* Introduce workflow orchestration
+* [Architecture Design](./docs/architecture.md)
+* [Architecture Decision Records](./docs/adrs.md)
+* [Failure Scenarios](./docs/failure-scenarios.md)
+
+---
+
+## Known Gaps and Future Improvements
+
+Due to time constraints, some features are not fully implemented:
+
+* Alerting (CloudWatch Alarm + SNS)
+* Retry mechanism
+* Idempotency for duplicate processing
+* BI integration (Athena / QuickSight)
 
 ---
 
@@ -151,83 +194,3 @@ python run_local.py
 ```bash
 cdk destroy
 ```
-## Execution Evidence
-
-### 1. Unit Test Result
-
-All unit tests passed successfully using pytest.
-
-### 2. Deployment
-
-Infrastructure deployed successfully using AWS CDK.
-
-### 3. S3 Raw Upload
-
-CSV file uploaded to raw bucket successfully triggered the pipeline.
-
-### 4. Processed Data
-
-Cleaned data was written to the processed S3 bucket in partitioned format.
-
-### 5. Error Handling
-
-Invalid records were written to the error S3 bucket.
-
-### 6. DynamoDB Metadata
-
-Pipeline execution metadata was recorded successfully.
-
-Example:
-
-* file_id: sample_sales_data.csv
-* clean_records: 99
-* error_records: 4
-* status: COMPLETED
-
-### 7.Business Metrics
-
-The pipeline also computes key business metrics:
-
-- Daily revenue
-- Top products
-- Payment success rate
-
-### 8. CloudWatch Logs
-
-Lambda execution logs confirm successful processing without runtime errors.
-
-## 📸 Evidence
-
-### Unit Tests
-![pytest](./evidence/01_pytest.png)
-
-### Infrastructure Deployment
-![deploy](./evidence/02_deploy.png)
-
-### Processed Data (S3)
-![processed](./evidence/03_processed.png)
-
-### Error Handling (S3)
-![error](./evidence/04_error.png)
-
-### Metadata Tracking (DynamoDB)
-![dynamodb](./evidence/05_dynamoDB.png)
-
-### Business Metrics
-![business-metrics](./evidence/06_business_metrics.png)
-
-### CloudWatch Logs
-![cloudwatch](./evidence/07_cloudwatch.png)
-
-## Additional Documentation
-
-- [Architecture Design](./docs/architecture.md)
-- [Architecture Decision Records](./docs/adrs.md)
-- [Failure Scenarios](./docs/failure-scenarios.md)
-
-## Limitations & Future Improvements
-
-- Add retry mechanism for failed Lambda execution
-- Add CloudWatch alerts for failures
-- Improve idempotency to avoid duplicate processing
-- Integrate with Athena or BI tools for analytics
