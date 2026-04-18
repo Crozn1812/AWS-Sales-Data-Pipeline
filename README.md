@@ -217,10 +217,10 @@ Lambda execution logs confirm successful processing without runtime errors.
 ![business-metrics](./evidence/06_business_metrics.png)
 
 ### CloudWatch Logs
-
-![cloudwatch](evidence/07_cloudwatch.png)
+![cloudwatch](./evidence/07_cloudwatch.png)
 
 ## Additional Documentation
+
 - [Architecture Design](./docs/architecture.md)
 - [Architecture Decision Records](./docs/adrs.md)
 - [Failure Scenarios](./docs/failure-scenarios.md)
