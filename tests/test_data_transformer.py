@@ -3,7 +3,7 @@ import pytest
 import sys
 import os
 
-# Thêm thư mục src vào đường dẫn để import được hàm logic
+# Add the `src` folder to the path to import the logic functions.
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "../src")))
 
 from data_transformer import clean_and_transform_sales_data
@@ -27,13 +27,13 @@ def test_happy_path_and_cleaning_logic():
 
     df_clean, df_error = clean_and_transform_sales_data(df_raw)
 
-    # Chỉ ORD001 (bản ghi đầu tiên), ORD003 và ORD004 là hợp lệ
+    # Only ORD001 (the first record), ORD003, and ORD004 are valid.
     assert len(df_clean) == 3, "Dữ liệu sạch phải chứa đúng 3 dòng"
 
-    # Kiểm tra line_revenue của ORD003 = 5 * 15 = 75
+    # Check line_revenue of ORD003 = 5 * 15 = 75
     assert df_clean[df_clean["order_id"] == "ORD003"]["line_revenue"].iloc[0] == 75.0
 
-    # Dữ liệu lỗi gồm:
+    # Data Includes:
     # - ORD001 bản duplicate có quantity = -1 -> invalid
     # - ORD002 có quantity = None -> missing
     assert len(df_error) == 2, "Kho dữ liệu lỗi phải chứa đúng 2 dòng dị thường"

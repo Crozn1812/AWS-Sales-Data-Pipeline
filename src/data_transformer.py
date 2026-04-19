@@ -24,7 +24,7 @@ def clean_and_transform_sales_data(df: pd.DataFrame):
 
     working_df = df.copy()
 
-    # Chuẩn hóa kiểu dữ liệu
+    # Data type normalization
     working_df["quantity"] = pd.to_numeric(working_df["quantity"], errors="coerce")
     working_df["unit_price"] = pd.to_numeric(working_df["unit_price"], errors="coerce")
     working_df["payment_status"] = working_df["payment_status"].astype(str).str.strip().str.lower()

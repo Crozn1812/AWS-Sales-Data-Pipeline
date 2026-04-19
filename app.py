@@ -2,17 +2,17 @@ import os
 import sys
 import aws_cdk as cdk
 
-# Kéo thư mục hiện tại vào tầm nhìn của Python
+# Drag the current directory into Python's view.
 sys.path.append(os.path.dirname(__file__))
 
-# Bây giờ Python đã có thể tìm thấy thư mục infrastructure
+# Python can now find the directory infrastructure
 from infrastructure.app_stack import SalesPipelineStack
 
-# Khởi tạo ứng dụng CDK
+# Initialize the CDK application.
 app = cdk.App()
 
-# Khởi tạo Stack hạ tầng của dự án ShopMart
+# Initialize the infrastructure stack of the ShopMart project.
 SalesPipelineStack(app, "ShopmartSalesDataPipelineStack")
 
-# Tổng hợp (Synthesize) mã Python thành CloudFormation template
+# Synthesize the Python code into a CloudFormation template
 app.synth()
