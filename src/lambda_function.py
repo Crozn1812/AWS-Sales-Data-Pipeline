@@ -27,7 +27,7 @@ def lambda_handler(event, context):
 
         df_clean, df_error = clean_and_transform_sales_data(df_raw)
 
-        # parse order_date để partition tốt hơn
+        # parse order_date make partition better
         if not df_clean.empty:
             df_clean["order_date"] = df_clean["order_date"].astype(str)
             df_clean["year"] = df_clean["order_date"].str.slice(0, 4)
