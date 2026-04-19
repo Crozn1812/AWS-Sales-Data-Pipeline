@@ -39,3 +39,12 @@ print(top_products.to_string())
 # Payment success rate
 payment_success_rate = (df_clean["payment_status"].str.lower() == "paid").mean() * 100
 print(f"\n3. Payment Success Rate: {payment_success_rate:.2f}%")
+
+# Orders per customer
+orders_per_customer = (
+    df_clean.groupby("customer_id")["order_id"]
+    .nunique()
+)
+
+print("\n4. Orders per Customer")
+print(orders_per_customer.to_string())
